@@ -1,40 +1,40 @@
-# Data List
-pizza_list = [{'size':8,"price":10},{'size':10,"price":13},{'size':12,"price":16}]
-
-# Find Mean(X)
-total_size = sum([value['size'] for value in pizza_list ])
-mean_x = total_size / len(pizza_list)
-
-# Find Mean(Y)
-total_price = sum([value['price'] for value in pizza_list ])
-mean_y = total_price / len(pizza_list)
-
-# Find Deviation(X)
-deviation_x = [value['size'] - mean_x  for value in pizza_list]
+import math
 
 
-# Find Deviation(Y)
-deviation_y = [value['price'] - mean_y  for value in pizza_list]
+data = [
+    [1, 2, 'Red'],
+    [2, 3, 'Blue'],
+    [3, 1, 'Red'],
+    [6, 5, 'Blue']
+]
 
-# Find Product Deviation
-product_deviation = [x * y for x, y in zip(deviation_x,deviation_y)]
+test_point = [4, 3]
 
-# Find Sum Product Deviation
-sum_product_deviation = sum(product_deviation)
+K = 3
 
-# Find square of Deviation x
-square_deviation_x = [abs(2 * x) for x in deviation_x]
+# Compute distances
+distances = []
+for item in data:
+    features = item[:-1]
+    label = item[-1]
 
-# Equation LinearRegression y = mx+b
+    distance = math.sqrt(sum((features[i] - test_point[i] )**2 for i in range(len(features))))
+    distances.append((distance, label))
 
-# Find m Value
-m_value = sum_product_deviation / sum(square_deviation_x)
 
-# Find b Value
-b_value = mean_y - (m_value * mean_x)
+distances.sort(key=lambda x: x[0])
+neighbors = distances[:K]
 
-size = input("Could you tell me what size pizza you would like? ")
+# Majority vote
+votes = {}
+for dist, label in neighbors:
+    
+    votes[label] = votes.get(label, 0) + 1
 
-price  = (float(m_value) * float(size)) + b_value
+predicted_label = max(votes,key=votes.get)
 
-print(f"The cost of a {size}-size pizza is ${max(0,price)}.")
+
+
+print("Neighbors:", neighbors)
+print("Votes:", votes)
+print("Predicted Class:", predicted_label)
